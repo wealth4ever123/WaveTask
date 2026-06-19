@@ -1,0 +1,50 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Task {
+  id               Int      @id @default(autoincrement())
+  onChainId        Int      @unique
+  creator          String
+  targetContract   String
+  triggerType      String
+  triggerData      String
+  rewardXlm        BigInt
+  status           String   @default("Pending")
+  createdAt        DateTime @default(now())
+  executeAfter     DateTime
+  executedAt       DateTime?
+  executedByKeeper String?
+
+  executions Execution[]
+}
+
+model Keeper {
+  id               Int      @id @default(autoincrement())
+  address          String   @unique
+  stake            BigInt   @default(0)
+  reputationScore  Int      @default(100)
+  totalExecutions  Int      @default(0)
+  failedExecutions Int      @default(0)
+  registeredAt     DateTime @default(now())
+
+  executions Execution[]
+}
+
+model Execution {
+  id          Int      @id @default(autoincrement())
+  taskId      Int
+  keeperAddr  String
+  txHash      String   @unique
+  success     Boolean
+  rewardPaid  BigInt
+  executedAt  DateTime @default(now())
+
+  task   Task   @relation(fields: [taskId], references: [id])
+  keeper Keeper @relation(fields: [keeperAddr], references: [address])
+}

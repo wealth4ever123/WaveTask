@@ -1,0 +1,9 @@
+node_modules/
+target/
+.env
+.env.local
+dist/
+.next/
+prisma/migrations/dev
+*.wasm
+!contracts/target/wasm32-unknown-unknown/release/*.wasm

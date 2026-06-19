@@ -1,0 +1,15 @@
+{
+  "name": "wavetask",
+  "private": true,
+  "workspaces": ["keeper", "backend", "frontend"],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\" \"npm run dev --workspace=keeper\"",
+    "build": "npm run build --workspaces",
+    "contracts:build": "cd contracts && cargo build --target wasm32-unknown-unknown --release",
+    "contracts:test": "cd contracts && cargo test",
+    "contracts:deploy": "node scripts/deploy-contracts.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
